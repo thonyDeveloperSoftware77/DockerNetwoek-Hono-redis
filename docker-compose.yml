@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  redis:
+    build: ./redis
+    container_name: redis
+    networks:
+      - app_network
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  hono:
+    build: ./app
+    container_name: hono
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    external: true
+
+volumes:
+  redis_data:
